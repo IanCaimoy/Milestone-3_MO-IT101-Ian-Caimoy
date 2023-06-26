@@ -36,9 +36,10 @@ class Employee
     // Declaration of Variables
     // Employee DTR
     // Salary Calculation
-    private String _date;
+    private int _week;
     private LocalTime _timeIn;
     private LocalTime _timeOut;
+    private float _totalHoursWorked;
     private float _hourlyRate;
     private float _basicSalary;
     private float _riceSubsidy;
@@ -112,9 +113,9 @@ class Employee
         return _employeeSupervisor;
     }
     
-    public String getDate()
+    public int getWeek()
     {
-        return _date;
+        return _week;
     }
     
     public LocalTime getTimeIn()
@@ -152,10 +153,15 @@ class Employee
         return _clothingAllowance;
     }
     
+    public float getTotalHoursWorked()
+    {
+        return _totalHoursWorked;
+    }
     
     // Compute Hours Worked
     // using "between" method in Duration Class
     // Return _duration as hours
+    /**
     public double computeHoursWorked()
     {
         Duration duration = Duration.between(_timeIn, _timeOut);
@@ -163,14 +169,14 @@ class Employee
         double hours = (double) minutes / 60;
         return hours;
     }
-    
+    **/
     
     // Compute Gross Salary method
     // Created a local variable "_totalHoursWorked" to get the value from "computeHoursWorked" method
     // Return value _totalHoursWorked * _hourlyRate
     public float basicPay()
     {
-        return (float) (computeHoursWorked() * _hourlyRate);   
+        return (float) (getTotalHoursWorked() * _hourlyRate);   
     }
     
     
@@ -492,7 +498,7 @@ class Employee
     // Sets the values for the declared variables
     public void displayEmployeeDetails (String employeeNo) throws FileNotFoundException, IOException, CsvValidationException
     {
-        String filename = "MotorPH Employee Data.csv";
+        String filename = "MotorPH Employee Details - Corrected.csv";
         CSVReader reader = new CSVReader (new FileReader(filename));
         String[] header = reader.readNext();
         String[] record;
@@ -525,21 +531,29 @@ class Employee
     
     // Employee Attendance File Reading
     // Sets the values for the declared variables 
-    public void displayAttendanceRecord (String employeeNo) throws FileNotFoundException, IOException, CsvValidationException
+    public void computeHoursWorked (String employeeNo, int weekNo) throws FileNotFoundException, IOException, CsvValidationException
     {
-        String filename = "MotorPH Attendance Record.csv";
+        String filename = "MotorPH Employee Attendance - Corrected.csv";
         CSVReader reader = new CSVReader (new FileReader(filename));
         String[] header = reader.readNext();
         String[] attendance;
         while ((attendance = reader.readNext()) != null)
         {
-            if (attendance[0].equals(employeeNo))
+            if (attendance[0].equals(employeeNo)&& Integer.parseInt(attendance[4]) == weekNo)
             {
-                String strTimeIn = attendance[4];
-                String strTimeOut = attendance[5];
-                _date = attendance[3];
+                String strTimeIn = attendance[5];
+                String strTimeOut = attendance[6];
+                _week = Integer.parseInt(attendance[4]);
                 _timeIn = LocalTime.parse(strTimeIn);
                 _timeOut = LocalTime.parse(strTimeOut);
+                
+                //compute hours worked
+                Duration duration = Duration.between(_timeIn, _timeOut);
+                long minutes = duration.toMinutes();
+                double hours = (double) minutes / 60;
+                
+                _totalHoursWorked += hours;
+                
             }
         }
     }

@@ -46,7 +46,7 @@ public class Main
 
         Employee _employee = new Employee();
         _employee.displayEmployeeDetails(employeeNo);
-        _employee.displayAttendanceRecord(employeeNo);
+        
 
         // Display Employee Details
         System.out.println();
@@ -78,8 +78,9 @@ public class Main
         
         // Prompt User for Payslip printing
         Scanner input = new Scanner(System.in);
+        Scanner week = new Scanner(System.in);
         String userInput;
-
+        
         while (true) 
         {
             System.out.print("Do you wish to print your Payslip? (YES/NO): ");
@@ -87,13 +88,31 @@ public class Main
 
             if (userInput.equals("YES")) 
             {
+                int weekNo;
+                while (true) 
+                {
+                    System.out.print("Enter Week No. (1-53): ");
+                    weekNo = week.nextInt();
+
+                    if (weekNo >= 1 && weekNo <= 53) 
+                    {
+                        break;
+                    } 
+                    else 
+                    {
+                        System.out.println("Invalid week number. Please enter a value between 1-53.");
+                    }
+                }
+
+                _employee.computeHoursWorked(employeeNo, weekNo);
+
                 System.out.println();
                 System.out.println();
                 System.out.println("PAYSLIP");
                 System.out.println("============================");
                 System.out.println();
-                System.out.println("Date Worked: " + _employee.getDate());
-                System.out.println("Total Hours Worked: " + _employee.computeHoursWorked());
+                System.out.println("Week No: " + _employee.getWeek());
+                System.out.println("Total Hours Worked: " + _employee.getTotalHoursWorked());
                 System.out.println("Hourly Rate: " + _employee.getHourlyRate());
                 System.out.println("============================");
                 System.out.println("BASIC PAY: " + _employee.basicPay());
@@ -121,7 +140,7 @@ public class Main
             } 
             else if (userInput.equals("NO")) 
             {
-                System.out.println("Thank you for your hardwork!");
+                System.out.println("Thank you for your hard work!");
                 break;
             } 
             else 
