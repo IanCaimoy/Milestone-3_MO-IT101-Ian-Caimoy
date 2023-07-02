@@ -197,13 +197,17 @@ class Employee
         float basicPay = basicPay();
         float i = 1500;
         
-        if (basicPay <= i)
+        if (basicPay > 0 && basicPay <= i)
         {
             return basicPay * 0.01f;
         }
         else if (basicPay > i)
         {
             return basicPay * 0.02f;
+        }
+        else if (basicPay == 0)
+        {
+            return 0;
         }
         else
         {
@@ -215,13 +219,18 @@ class Employee
     // Compute Max PAGIBIG Contribution    
     public float getPagibig()
     {
-        if (computePagibigRate() < 99f)
+        float max = 100;
+        if (computePagibigRate() > 0 && computePagibigRate() < max)
         {
             return computePagibigRate();
         }
+        else if (computePagibigRate() == 0)
+        {
+            return 0;
+        }
         else
         {
-            return 100;
+            return max;
         }
     }
     
@@ -235,7 +244,7 @@ class Employee
         float maximum = 60000f;
         float employeeShare = 0.5f;
         
-        if (basicPay <= minimum)
+        if (basicPay > 0 && basicPay <= minimum)
         {
             return minimum * premiumRate * employeeShare;
         }
@@ -247,7 +256,11 @@ class Employee
         {
             return  maximum * premiumRate * employeeShare;
         }
-        else
+        else if (basicPay == 0)
+        {
+            return 0;
+        }
+        else 
         {
             return 0;
         }
@@ -258,7 +271,7 @@ class Employee
     {
         float basicPay = basicPay();
         
-        if (basicPay < 3250f)
+        if (basicPay > 0 && basicPay < 3250f)
         {
             return 135f;
         }
@@ -438,6 +451,10 @@ class Employee
         {
             return 1125f;
         }
+        else if (basicPay == 0)
+        {
+            return 0;
+        }
         else
         {
             return 0;
@@ -456,7 +473,7 @@ class Employee
      // Compute Withholding Tax
      public float getWithholdingTax()
      {
-          float taxableIncome = getTaxableIncome();
+         float taxableIncome = getTaxableIncome();
          if (taxableIncome < 20833f)
          {
              return 0;
