@@ -138,38 +138,25 @@ class Employee
         return _basicSalary;
     }
     
-    public float getRiceSubsidy()
+    public float getWeeklyRiceSubsidy()
     {
-        return _riceSubsidy;
+        return _riceSubsidy / 4 ;
     }
     
-    public float getPhoneAllowance()
+    public float getWeeklyPhoneAllowance()
     {
-        return _phoneAllowance;
+        return _phoneAllowance / 4;
     }
     
-    public float getClothingAllowance()
+    public float getWeeklyClothingAllowance()
     {
-        return _clothingAllowance;
+        return _clothingAllowance / 4;
     }
     
     public float getTotalHoursWorked()
     {
         return _totalHoursWorked;
     }
-    
-    // Compute Hours Worked
-    // using "between" method in Duration Class
-    // Return _duration as hours
-    /**
-    public double computeHoursWorked()
-    {
-        Duration duration = Duration.between(_timeIn, _timeOut);
-        long minutes = duration.toMinutes();
-        double hours = (double) minutes / 60;
-        return hours;
-    }
-    **/
     
     // Compute Gross Salary method
     // Created a local variable "_totalHoursWorked" to get the value from "computeHoursWorked" method
@@ -179,11 +166,10 @@ class Employee
         return (float) (getTotalHoursWorked() * _hourlyRate);   
     }
     
-    
     // Compute Gross Pay
     public float grossPay()
     {
-        return basicPay() + _riceSubsidy + _phoneAllowance + _clothingAllowance;
+        return basicPay() + getWeeklyRiceSubsidy() + getWeeklyPhoneAllowance() + getWeeklyClothingAllowance();
     }
     
     // THIS SECTION CONTAINS 
@@ -197,13 +183,17 @@ class Employee
         float basicPay = basicPay();
         float i = 1500;
         
-        if (basicPay <= i)
+        if (basicPay > 0 && basicPay <= i)
         {
             return basicPay * 0.01f;
         }
         else if (basicPay > i)
         {
             return basicPay * 0.02f;
+        }
+        else if (basicPay == 0)
+        {
+            return 0;
         }
         else
         {
@@ -215,13 +205,18 @@ class Employee
     // Compute Max PAGIBIG Contribution    
     public float getPagibig()
     {
-        if (computePagibigRate() < 99f)
+        float max = 100;
+        if (computePagibigRate() > 0 && computePagibigRate() < max)
         {
             return computePagibigRate();
         }
+        else if (computePagibigRate() == 0)
+        {
+            return 0;
+        }
         else
         {
-            return 100;
+            return max;
         }
     }
     
@@ -235,7 +230,7 @@ class Employee
         float maximum = 60000f;
         float employeeShare = 0.5f;
         
-        if (basicPay <= minimum)
+        if (basicPay > 0 && basicPay <= minimum)
         {
             return minimum * premiumRate * employeeShare;
         }
@@ -247,7 +242,11 @@ class Employee
         {
             return  maximum * premiumRate * employeeShare;
         }
-        else
+        else if (basicPay == 0)
+        {
+            return 0;
+        }
+        else 
         {
             return 0;
         }
@@ -258,7 +257,7 @@ class Employee
     {
         float basicPay = basicPay();
         
-        if (basicPay < 3250f)
+        if (basicPay > 0 && basicPay < 3250f)
         {
             return 135f;
         }
@@ -438,6 +437,10 @@ class Employee
         {
             return 1125f;
         }
+        else if (basicPay == 0)
+        {
+            return 0;
+        }
         else
         {
             return 0;
@@ -456,7 +459,7 @@ class Employee
      // Compute Withholding Tax
      public float getWithholdingTax()
      {
-          float taxableIncome = getTaxableIncome();
+         float taxableIncome = getTaxableIncome();
          if (taxableIncome < 20833f)
          {
              return 0;
@@ -480,19 +483,17 @@ class Employee
          else
          {
              return taxableIncome - 666667f * 0.35f + 200833.33f;
-         }
-         
+         }  
      }
      
      // Compute Net Pay
-     // Taxable Income - Withholding Tax
+     // Taxable Income - Withholding Tax + De Minimis
      public float getNetPay()
      {
-         return getTaxableIncome() - getWithholdingTax() + _riceSubsidy + _phoneAllowance + _clothingAllowance;
+         return getTaxableIncome() - getWithholdingTax() + getWeeklyRiceSubsidy() + getWeeklyPhoneAllowance() + getWeeklyClothingAllowance();
      }
-            
     
-    
+     
     // This section contains CSV Reading class/methods
     // Employee Records file reading
     // Sets the values for the declared variables
@@ -556,7 +557,5 @@ class Employee
                 
             }
         }
-    }
-    
-        
+    }    
 }
