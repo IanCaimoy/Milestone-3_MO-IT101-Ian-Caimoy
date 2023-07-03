@@ -172,9 +172,13 @@ class Employee
         return basicPay() + getWeeklyRiceSubsidy() + getWeeklyPhoneAllowance() + getWeeklyClothingAllowance();
     }
     
-    // THIS SECTION CONTAINS 
-    // DEDUCTIONS
-    // Withholding Tax
+    /** 
+        THIS SECTION CONTAINS 
+        * Deductions
+        * Withholding Tax
+        * Net Pay Calculation
+        * CSV File Reader
+    **/   
     
     // Compute PAGIBIG contribution
     // Getter Method + IF Statement
